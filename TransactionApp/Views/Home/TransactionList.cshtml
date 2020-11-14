@@ -1,0 +1,21 @@
+﻿@model TransactionsModel
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Payment</th>
+            <th>Status</th>
+        </tr>
+
+        @{
+            var translist = Model.Transactions;
+            foreach (var tran in translist)
+            {
+                <tr class="text-center">
+
+                    <th>@tran.TransactionIdentificator</th>
+                    <th>@tran.Amount @tran.CurrencyCode</th>
+                    <th>@tran.Status</th>
+                </tr>
+            }
+        }
+    </table>

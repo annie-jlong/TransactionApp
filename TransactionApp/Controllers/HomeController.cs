@@ -16,10 +16,12 @@ namespace TransactionApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly TransactionDBContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(TransactionDBContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -53,7 +55,17 @@ namespace TransactionApp.Controllers
                 }
 
                 if (trans != null)
-                    return Ok();
+                {
+                    foreach(var tran in trans)
+                    {
+                        _context.Add(tran);
+                        _context.SaveChanges();
+                    }
+                    var resModel = new TransactionsModel();
+                    resModel.Transactions = trans.ToList();
+
+                    return View(viewName:"TransactionList",resModel);
+                }
                 else
                     return View(viewName:"Index");
             }
@@ -89,37 +101,37 @@ namespace TransactionApp.Controllers
             try
             {
                 List<Transaction> transactions = new List<Transaction>();
-                //XmlReaderSettings settings = new XmlReaderSettings();
-                //settings.IgnoreWhitespace = true;
-
-                //XmlReader xmlreader = XmlReader.Create(reader);
+              
                 XElement group = XElement.Load(reader);
-                //XElement group = (XElement)XDocument.Load(xmlreader);
-                //XElement group = (XElement)XDocument.ReadFrom(xmlreader);
+                
                 var query = group.Descendants("Transaction");
                 foreach (var tran in query)
                 {
                     var transaction = new Transaction();
                     transaction.TransactionIdentificator = tran.Attribute("id").Value;
-                    tran.Descendants().Select(x => {
-                        if (x.NodeType == XmlNodeType.Element && x.Name == "TransactionDate")
+                    foreach (var node in tran.Descendants())
+                    {
+                        if (node.NodeType == XmlNodeType.Element && node.Name == "TransactionDate")
                         {
-                            transaction.TransactionDate = DateTime.Parse(x.Value);
+                            transaction.TransactionDate = DateTime.Parse(node.Value);
                         }
-                        if (x.NodeType == XmlNodeType.Element && x.Name == "Amount")
+                        if (node.NodeType == XmlNodeType.Element && node.Name == "Amount")
                         {
-                            transaction.Amount = Decimal.Parse(x.Value);
+                            transaction.Amount = Decimal.Parse(node.Value);
                         }
-                        if (x.NodeType == XmlNodeType.Element && x.Name == "CurrencyCode")
+                        if (node.NodeType == XmlNodeType.Element && node.Name == "CurrencyCode")
                         {
-                            transaction.CurrencyCode = x.Value;
+                            transaction.CurrencyCode = node.Value;
                         }
-                        if (x.NodeType == XmlNodeType.Element && x.Name == "Status")
+                        if (node.NodeType == XmlNodeType.Element && node.Name == "Status")
                         {
-                            transaction.Status = (StatusCode)Enum.Parse(typeof(StatusCode), x.Value);
+                            transaction.Status = (StatusCode)Enum.Parse(typeof(StatusCode), node.Value);
                         }
-                        return true;
-                    });
+                        
+                    }
+                    //tran.Descendants().Select(x => {
+                        
+                    //});
                     transactions.Add(transaction);
                 }
 

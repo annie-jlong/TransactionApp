@@ -5,7 +5,9 @@ namespace TransactionApp.Models
     {
         Approved,
         Failed,
-        Finished
+        Rejected,
+        Finished,
+        Done
     }
 
     public class Transaction
