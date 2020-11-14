@@ -1,9 +1,9 @@
 ﻿@model TransactionsModel
     <table>
-        <tr>
-            <th>Id</th>
-            <th>Payment</th>
-            <th>Status</th>
+        <tr class="text-center">
+            <th width="15%">Id</th>
+            <th width="75%">Payment</th>
+            <th width="15%">Status</th>
         </tr>
 
         @{
@@ -12,9 +12,9 @@
             {
                 <tr class="text-center">
 
-                    <th>@tran.TransactionIdentificator</th>
-                    <th>@tran.Amount @tran.CurrencyCode</th>
-                    <th>@tran.Status</th>
+                    <th width="15%">@tran.Id</th>
+                    <th width="75%">@tran.Payment</th>
+                    <th width="15%">@tran.Status</th>
                 </tr>
             }
         }

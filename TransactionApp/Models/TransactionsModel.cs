@@ -5,6 +5,6 @@ namespace TransactionApp.Models
 {
     public class TransactionsModel
     {
-        public IList<Transaction> Transactions { get; set; }
+        public IList<TransactionViewModel> Transactions { get; set; }
     }
 }

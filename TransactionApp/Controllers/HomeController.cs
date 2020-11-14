@@ -11,23 +11,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TransactionApp.Mappers;
 using TransactionApp.Models;
+using TransactionApp.Services;
 
 namespace TransactionApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TransactionDBContext _context;
+        private readonly ITransactionService _transactionService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(TransactionDBContext context, ILogger<HomeController> logger)
+        public HomeController(TransactionDBContext context, ILogger<HomeController> logger, ITransactionService transactionService)
         {
-            _context = context;
             _logger = logger;
+            _transactionService = transactionService;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult List()
+        {
+            var trans = _transactionService.GetAllTransactions();
+            var viewList = new List<TransactionViewModel>();
+            foreach (var tran in trans)
+            {
+                var tranView = tran.toTransactionViewModel();
+                viewList.Add(tranView);
+            }
+            var resModel = new TransactionsModel();
+            resModel.Transactions = viewList;
+
+            return View(viewName: "TransactionList", resModel);
         }
 
         [HttpPost]
@@ -56,13 +72,15 @@ namespace TransactionApp.Controllers
 
                 if (trans != null)
                 {
+                    _transactionService.SaveTransaction(trans);
+                    var viewList = new List<TransactionViewModel>();
                     foreach(var tran in trans)
-                    {
-                        _context.Add(tran);
-                        _context.SaveChanges();
+                    { 
+                        var tranView = tran.toTransactionViewModel();
+                        viewList.Add(tranView);
                     }
                     var resModel = new TransactionsModel();
-                    resModel.Transactions = trans.ToList();
+                    resModel.Transactions = viewList;
 
                     return View(viewName:"TransactionList",resModel);
                 }
