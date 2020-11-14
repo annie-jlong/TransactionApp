@@ -34,14 +34,7 @@ namespace TransactionApp.Controllers
         public IActionResult List()
         {
             var trans = _transactionService.GetAllTransactions();
-            var viewList = new List<TransactionViewModel>();
-            foreach (var tran in trans)
-            {
-                var tranView = tran.toTransactionViewModel();
-                viewList.Add(tranView);
-            }
-            var resModel = new TransactionsModel();
-            resModel.Transactions = viewList;
+            var resModel = GetListModel(trans);
 
             return View(viewName: "TransactionList", resModel);
         }
@@ -73,16 +66,10 @@ namespace TransactionApp.Controllers
                 if (trans != null)
                 {
                     _transactionService.SaveTransaction(trans);
-                    var viewList = new List<TransactionViewModel>();
-                    foreach(var tran in trans)
-                    { 
-                        var tranView = tran.toTransactionViewModel();
-                        viewList.Add(tranView);
-                    }
-                    var resModel = new TransactionsModel();
-                    resModel.Transactions = viewList;
 
-                    return View(viewName:"TransactionList",resModel);
+                    return RedirectToAction("List");
+                    //var resModel = GetListModel(trans);
+                    //return View(viewName:"TransactionList",resModel);
                 }
                 else
                     return View(viewName:"Index");
@@ -93,6 +80,19 @@ namespace TransactionApp.Controllers
                 ModelState.AddModelError("FileUpload", ex.Message);
                 return View(viewName: "Index");
             }
+        }
+
+        private TransactionsModel GetListModel(IEnumerable<Transaction> transactions)
+        {
+            var viewList = new List<TransactionViewModel>();
+            foreach (var tran in transactions)
+            {
+                var tranView = tran.toTransactionViewModel();
+                viewList.Add(tranView);
+            }
+            var resModel = new TransactionsModel();
+            resModel.Transactions = viewList;
+            return resModel;
         }
 
         private IEnumerable<Transaction> ReadCSV(StreamReader reader)
@@ -145,11 +145,7 @@ namespace TransactionApp.Controllers
                         {
                             transaction.Status = (StatusCode)Enum.Parse(typeof(StatusCode), node.Value);
                         }
-                        
                     }
-                    //tran.Descendants().Select(x => {
-                        
-                    //});
                     transactions.Add(transaction);
                 }
 

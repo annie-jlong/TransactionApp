@@ -8,5 +8,6 @@ namespace TransactionApp.Services
     {
         void SaveTransaction(IEnumerable<Transaction> transactions);
         IEnumerable<Transaction> GetAllTransactions();
+        IEnumerable<Transaction> GetTransactions(string Currency, DateTime? DateFrom, DateTime? DateTo, string Status);
     }
 }
