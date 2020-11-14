@@ -1,0 +1,17 @@
+﻿@model FileModel
+@using TransactionApp.Models
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <form asp-action="UploadFile" enctype="multipart/form-data">
+        <input asp-for="FileUpload" />
+        
+        <input type="submit" />
+        <div><span asp-validation-for="FileUpload" class="text-danger"></span></div>
+    </form>
+</div>
