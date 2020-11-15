@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+  <Transactions>
+    <Transaction id="001">
+    	<TransactionDate>2020-02-01T11:00:00</TransactionDate>
+    	<PaymentDetails>
+    		<Amount>200.00</Amount>
+    		<CurrencyCode>USD</CurrencyCode>
+    	</PaymentDetails>
+    	<Status>Approved</Status>
+    </Transaction>
+    <Transaction id="002">
+    	<TransactionDate>2020-02-02T11:00:00</TransactionDate>
+    	<PaymentDetails>
+    		<Amount>1000.00</Amount>
+    		<CurrencyCode>USD</CurrencyCode>
+    	</PaymentDetails>
+    	<Status>Rejected</Status>
+    </Transaction>
+</Transactions>
