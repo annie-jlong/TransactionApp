@@ -51,11 +51,21 @@ namespace TransactionApp.Services
                     query = query.Where(x => x.TransactionDate <= DateTo && x.TransactionDate >= DateFrom).ToList();
                 }
 
+                StatusCode statusCode=StatusCode.Approved;
+                bool bStatus = false;
                 if (!string.IsNullOrEmpty(Status))
                 {
-                    var statusCode = (StatusCode)Enum.Parse(typeof(StatusCode), Status);
+                    object obj;
+                    bStatus = Enum.TryParse(typeof(StatusCode), Status, out obj);
+                    if (bStatus)
+                        statusCode = (StatusCode)Enum.Parse(typeof(StatusCode), Status); 
+                }
+
+                if (bStatus)
+                {
                     query = query.Where(x => x.Status == statusCode).ToList();
                 }
+                
                 return query;
             }
             catch(Exception ex)

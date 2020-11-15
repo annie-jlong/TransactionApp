@@ -59,6 +59,8 @@ namespace TransactionApp
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseExceptionHandler("/error"); // Add this
+            //app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

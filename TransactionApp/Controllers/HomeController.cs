@@ -66,18 +66,16 @@ namespace TransactionApp.Controllers
                 if (trans != null)
                 {
                     _transactionService.SaveTransaction(trans);
-
                     return RedirectToAction("List");
-                    //var resModel = GetListModel(trans);
-                    //return View(viewName:"TransactionList",resModel);
                 }
                 else
                     return View(viewName:"Index");
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                ModelState.AddModelError("FileUpload", ex.Message);
+                var message = ex.InnerException.Message ?? ex.Message;
+                _logger.LogError(ex, message);
+                ModelState.AddModelError("FileUpload", message);
                 return View(viewName: "Index");
             }
         }
