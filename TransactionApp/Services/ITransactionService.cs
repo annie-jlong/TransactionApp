@@ -7,7 +7,7 @@ namespace TransactionApp.Services
     public interface ITransactionService
     {
         void SaveTransaction(IEnumerable<Transaction> transactions);
-        IEnumerable<Transaction> GetAllTransactions();
-        IEnumerable<Transaction> GetTransactions(string Currency, DateTime? DateFrom, DateTime? DateTo, string Status);
+        IEnumerable<TransactionViewModel> GetAllTransactions();
+        IEnumerable<TransactionViewModel> GetTransactions(string Currency, DateTime? DateFrom, DateTime? DateTo, string Status);
     }
 }

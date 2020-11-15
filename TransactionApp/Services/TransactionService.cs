@@ -30,12 +30,12 @@ namespace TransactionApp.Services
             }
         }
 
-        public IEnumerable<Transaction> GetAllTransactions()
+        public IEnumerable<TransactionViewModel> GetAllTransactions()
         {
-           return _context.Transaction;
+           return _context.Transaction.ToList().Select(x => { return x.toTransactionViewModel(); });
         }
 
-        public IEnumerable<Transaction> GetTransactions(string Currency, DateTime? DateFrom, DateTime? DateTo, string Status)
+        public IEnumerable<TransactionViewModel> GetTransactions(string Currency, DateTime? DateFrom, DateTime? DateTo, string Status)
         {
             try
             {
@@ -65,8 +65,9 @@ namespace TransactionApp.Services
                 {
                     query = query.Where(x => x.Status == statusCode).ToList();
                 }
-                
-                return query;
+
+                var res = query.Select(x => { return x.toTransactionViewModel(); });
+                return res;
             }
             catch(Exception ex)
             {

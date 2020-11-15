@@ -34,8 +34,8 @@ namespace TransactionApp.Controllers
         public IActionResult List()
         {
             var trans = _transactionService.GetAllTransactions();
-            var resModel = GetListModel(trans);
-
+            var resModel = new TransactionsModel();
+            resModel.Transactions = trans.ToList();
             return View(viewName: "TransactionList", resModel);
         }
 

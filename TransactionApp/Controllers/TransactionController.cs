@@ -22,7 +22,7 @@ namespace TransactionApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Transaction> Get([FromQuery]QueryParam param)
+        public IEnumerable<TransactionViewModel> Get([FromQuery]QueryParam param)
         {
             try
             {

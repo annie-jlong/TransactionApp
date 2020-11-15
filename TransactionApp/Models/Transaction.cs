@@ -42,7 +42,7 @@ namespace TransactionApp.Models
             return new TransactionViewModel
             {
                 Id = this.TransactionIdentificator,
-                Payment = $"{ this.Amount } {this.CurrencyCode}",
+                Payment = $"{ this.Amount:0.00} {this.CurrencyCode}",
                 Status = status
             };
         }
