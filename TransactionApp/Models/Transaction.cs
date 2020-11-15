@@ -13,15 +13,21 @@ namespace TransactionApp.Models
     public class Transaction
     {
         public string TransactionIdentificator { get; set; }
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
         public string CurrencyCode { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public StatusCode Status { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public StatusCode? Status { get; set; }
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrEmpty(TransactionIdentificator) &&
+                Amount != null && !string.IsNullOrEmpty(CurrencyCode) && TransactionDate != null && Status != null;
+        }
 
         public TransactionViewModel toTransactionViewModel()
         {
             string status = string.Empty;
-            switch (this.Status)
+            switch (this.Status.Value)
             {
                 case StatusCode.Approved:
                     status = "A";
@@ -42,7 +48,7 @@ namespace TransactionApp.Models
             return new TransactionViewModel
             {
                 Id = this.TransactionIdentificator,
-                Payment = $"{ this.Amount:0.00} {this.CurrencyCode}",
+                Payment = $"{ this.Amount.Value:0.00} {this.CurrencyCode}",
                 Status = status
             };
         }

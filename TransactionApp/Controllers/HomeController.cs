@@ -69,7 +69,7 @@ namespace TransactionApp.Controllers
                     return RedirectToAction("List");
                 }
                 else
-                    return View(viewName:"Index");
+                    return BadRequest();
             }
             catch(Exception ex)
             {
@@ -99,9 +99,19 @@ namespace TransactionApp.Controllers
             {
                 using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.CurrentCulture))
                 {
+                    var result = new List<Transaction>();
                     csv.Configuration.RegisterClassMap<TransactionMap>();
-                    var records = csv.GetRecords<Transaction>().ToList();
-                    return records;
+                    while (csv.Read())
+                    {
+                        _logger.LogInformation(csv.Context.RawRecord); 
+                        var transaction = csv.GetRecord<Transaction>();
+
+                        if (transaction.IsValid())
+                            result.Add(transaction);
+                    }
+                    return result;
+                    //var records = csv.GetRecords<Transaction>().ToList();
+                    //return records;
                 }
             }
             catch(Exception ex)
@@ -127,6 +137,7 @@ namespace TransactionApp.Controllers
                     transaction.TransactionIdentificator = tran.Attribute("id").Value;
                     foreach (var node in tran.Descendants())
                     {
+                        _logger.LogInformation(node.ToString());
                         if (node.NodeType == XmlNodeType.Element && node.Name == "TransactionDate")
                         {
                             transaction.TransactionDate = DateTime.Parse(node.Value);
@@ -144,7 +155,10 @@ namespace TransactionApp.Controllers
                             transaction.Status = (StatusCode)Enum.Parse(typeof(StatusCode), node.Value);
                         }
                     }
-                    transactions.Add(transaction);
+                    if (transaction.IsValid())
+                        transactions.Add(transaction);
+                    else
+                        throw new Exception("Invalid file format.");
                 }
 
                 return transactions;
