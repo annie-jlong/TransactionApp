@@ -16,4 +16,6 @@ Create database TransactionDB
 Use TransactionDB
 Create Table [Transaction] (TransactionIdentificator VARCHAR(50) not null Primary Key, Amount decimal, CurrencyCode VARCHAR(10), TransactionDate datetime, Status Int)
 
-
+Sample api request:
+https://localhost:5001/api/transaction?currency=USD&status=Approved
+https://localhost:5001/api/transaction?datefrom=2020-01-01&dateto=2020-03-01
