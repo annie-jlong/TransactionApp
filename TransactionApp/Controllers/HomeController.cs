@@ -73,7 +73,7 @@ namespace TransactionApp.Controllers
             }
             catch(Exception ex)
             {
-                var message = ex.InnerException.Message ?? ex.Message;
+                var message = ex.InnerException?.Message ?? ex.Message;
                 _logger.LogError(ex, message);
                 ModelState.AddModelError("FileUpload", message);
                 return View(viewName: "Index");
